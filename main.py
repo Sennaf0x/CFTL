@@ -140,3 +140,8 @@ with col2:
                 st.success(f'''{st.session_state.explicacao}''')
             else:
                 st.error("Você errou")
+                st.write("Opção certa")
+                st.success(f"{st.session_state.gabarito}")
+                st.write("Explicação")
+                st.success(f'''{st.session_state.explicacao}''')
+                
