@@ -25,6 +25,9 @@ if "opcao4" not in st.session_state:
     st.session_state.opcao4 = ""
 if "opcao5" not in st.session_state:
     st.session_state.opcao5 = ""
+
+if "explicacao" not in st.session_state:
+    st.session_state.explicacao = ""
     
 
 
@@ -58,6 +61,7 @@ def ask_openai(assunto):
                                                        "opcao4": "4° opção gerada",
                                                        "opcao5": "5° opção gerada",
                                                        "gabarito": "Reescreva a opção que está correta aqui"
+                                                       "explicacao": "A explicação mais detalhada da sua resposta"
                                                       }
                                             
                                 ''' + f'''assunto = {assunto}
@@ -102,6 +106,7 @@ with col1:
         st.session_state.opcao4 = json.dumps(questionario['opcao4'], ensure_ascii=False)
         st.session_state.opcao5 = json.dumps(questionario['opcao5'], ensure_ascii=False)
         st.session_state.gabarito = json.dumps(questionario['gabarito'], ensure_ascii=False)
+        st.session_state.explicacao = json.dumps(questionario['explicacao'], ensure_ascii=False)
         
         print(f'''pergunta: {st.session_state.pergunta}''')
         print(f'''resposta: {st.session_state.opcao1}''')
@@ -110,6 +115,7 @@ with col1:
         print(f'''resposta: {st.session_state.opcao4}''')
         print(f'''resposta: {st.session_state.opcao5}''')
         print(f'''gabarito: {st.session_state.gabarito}''')
+        print(f'''explicacao: {st.session_state.explicacao}''')
         
     
 with col2:
@@ -130,5 +136,7 @@ with col2:
         if responder:
             if st.session_state.question == st.session_state.gabarito:
                 st.success("Você acertou!")
+                st.write("Explicação")
+                st.success(f'''{st.session_state.explicacao}''')
             else:
                 st.error("Você errou")
