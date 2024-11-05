@@ -34,7 +34,7 @@ if "explicacao" not in st.session_state:
 assunto = ""
 
 client = OpenAI()
-def ask_openai(assunto):
+def ask_openai(assunto, ctfl):
     if assunto == "":
         return "Como posso ajudá-lo?"
     try:
@@ -51,9 +51,9 @@ def ask_openai(assunto):
                 },
                 {
                     "role": "user",
-                    "content": ('''
-                                Elabore uma pergunta com 5 opções de resposta somente uma sendo verdadeira, conforme o texto do assunto enviado seguindo o seguinte exemplo:
-                                exemplo de resposta = {
+                    "content": (f'''
+                                Elabore uma pergunta {ctfl} com 5 opções de resposta somente uma sendo verdadeira, conforme o texto do assunto enviado seguindo o seguinte exemplo:
+                                ''' + '''exemplo de resposta = {
                                                        "pergunta": "Pergunta elaborada pelo chat de acordo com o assunto enviado", 
                                                        "opcao1": "1° opção gerada",
                                                        "opcao2": "2° opção gerada",
@@ -97,8 +97,13 @@ with col1:
     with st.form("assunto"):
         assunto = st.text_input("Insira aqui o assunto")
         gerar = st.form_submit_button("Gerar")
+        
+        nivel = st.radio("Selecione o nível",
+                         ["Para estudo", "Perguntas complexas estilo CTFL"]
+                        )
+        
     if gerar:
-        questionario = ask_openai(assunto)
+        questionario = ask_openai(assunto, nivel)
         st.session_state.pergunta = json.dumps(questionario['pergunta'], ensure_ascii=False)
         st.session_state.opcao1 = json.dumps(questionario['opcao1'], ensure_ascii=False)
         st.session_state.opcao2 = json.dumps(questionario['opcao2'], ensure_ascii=False)
@@ -127,6 +132,8 @@ with col2:
             "Selecione a opção certa para a pergunta acima",
             [st.session_state.opcao1,st.session_state.opcao2,st.session_state.opcao3,st.session_state.opcao4,st.session_state.opcao5]
         )
+
+
 
         print(f'''Você escolheu: {question}''')
         
