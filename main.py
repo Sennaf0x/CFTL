@@ -13,18 +13,18 @@ if "gabarito" not in st.session_state:
     st.session_state.gabarito = ""
 
 if "pergunta" not in st.session_state:
-    st.session_state.pergunta = ""
+    st.session_state.pergunta = "Insira um assunto no sobre o CTFL para que a questão seja gerada..."
 
 if "opcao1" not in st.session_state:
-    st.session_state.opcao1 = ""
+    st.session_state.opcao1 = "Opção 1"
 if "opcao2" not in st.session_state:
-    st.session_state.opcao2 = ""
+    st.session_state.opcao2 = "Opção 2"
 if "opcao3" not in st.session_state:
-    st.session_state.opcao3 = ""
+    st.session_state.opcao3 = "Opção 3"
 if "opcao4" not in st.session_state:
-    st.session_state.opcao4 = ""
+    st.session_state.opcao4 = "Opção 4"
 if "opcao5" not in st.session_state:
-    st.session_state.opcao5 = ""
+    st.session_state.opcao5 = "Opção 5"
 
 if "explicacao" not in st.session_state:
     st.session_state.explicacao = ""
@@ -113,6 +113,13 @@ with col1:
         st.session_state.gabarito = json.dumps(questionario['gabarito'], ensure_ascii=False)
         st.session_state.explicacao = json.dumps(questionario['explicacao'], ensure_ascii=False)
         
+        #st.session_state.opcao2
+        #st.session_state.opcao3 
+        #st.session_state.opcao4
+        #st.session_state.opcao5
+        #st.session_state.gabarito
+        #st.session_state.explicacao
+        
         print(f'''pergunta: {st.session_state.pergunta}''')
         print(f'''resposta: {st.session_state.opcao1}''')
         print(f'''resposta: {st.session_state.opcao2}''')
@@ -124,13 +131,38 @@ with col1:
         
     
 with col2:
-    st.write(st.session_state.pergunta)    
+
+    pergunta = st.session_state.pergunta
+    pergunta = pergunta.replace('"','')
+    
+    opcao1 = st.session_state.opcao1 
+    opcao1 = opcao1.replace('"','')
+    
+    opcao2 = st.session_state.opcao2 
+    opcao2 = opcao2.replace('"','')
+    
+    opcao3 = st.session_state.opcao3 
+    opcao3 = opcao3.replace('"','')
+    
+    opcao4 = st.session_state.opcao4 
+    opcao4 = opcao4.replace('"','')
+    
+    opcao5 = st.session_state.opcao5 
+    opcao5 = opcao5.replace('"','')
+    
+    gabarito = st.session_state.gabarito 
+    gabarito = gabarito.replace('"','')
+    
+    explicacao = st.session_state.explicacao 
+    explicacao = explicacao.replace('"','')
+    
+    st.write(pergunta)    
 
     with st.form("Ask"):
         
         question = st.radio(
             "Selecione a opção certa para a pergunta acima",
-            [st.session_state.opcao1,st.session_state.opcao2,st.session_state.opcao3,st.session_state.opcao4,st.session_state.opcao5]
+            [opcao1,opcao2, opcao3, opcao4, opcao5]
         )
 
 
@@ -141,14 +173,14 @@ with col2:
         
         responder = st.form_submit_button("Responder")
         if responder:
-            if st.session_state.question == st.session_state.gabarito:
+            if question == gabarito:
                 st.success("Você acertou!")
                 st.write("Explicação")
-                st.success(f'''{st.session_state.explicacao}''')
+                st.success(explicacao)
             else:
                 st.error("Você errou")
                 st.write("Opção certa")
-                st.success(f"{st.session_state.gabarito}")
+                st.success(gabarito)
                 st.write("Explicação")
-                st.success(f'''{st.session_state.explicacao}''')
+                st.success(explicacao)
                 
