@@ -4,6 +4,64 @@ import json
 
 st.set_page_config(layout="wide")
 
+st.markdown('''
+            <style>
+                .e1f1d6gn3{
+                    box-shadow: rgba(207,1,59, 0.1) 0px 4px 12px;
+                    padding: 10px;
+                    border-radius: 10px;
+                }
+                
+                .stSlider{
+                    border: solid rgba(207,1,59, 0.6);
+                    padding: 0 10px;
+                    margin-top: 10px;
+                    border-radius: 10px;
+                }
+                
+                stMainBlockContainer{
+                    background-color: #CFD8E3;
+                }
+                
+                .cor{
+                    background-color: #2B3B4B;
+                    color: #CFD8E3;
+                    text-align: center;
+                    border-radius: 10px;
+                    margin: 1px;   
+                }
+                
+                .conteudo{
+                    font-size: 15px;
+                    font-weight: bold;
+                }
+                
+                .pergunta{
+                    padding: 10px;
+                    background-color: #CFD8E3;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    text-align: justify;
+                    font-size: 17px;
+                    margin: 5px 0 ;
+                }
+                
+                .ef3psqc11{
+                    background-color: rgba(207,1,59);
+                    color: white;
+                    font-weight: bold;
+                    font-size: 15px;
+                }
+                
+                .ef3psqc11:hover{
+                    color: white;
+                    background-color: #2B3B4B;
+                }
+                
+                
+            </style>
+            ''', unsafe_allow_html=True)
+
 col1, col2, col3 = st.columns([2,3,2])
 
 if "question" not in st.session_state:
@@ -121,11 +179,13 @@ def gerar_imagem(descricao):
     
     
 with col1:
-    st.write("Gerador de perguntas")
+    st.write('''
+             <h2 class="cor">Gerador</h2>
+             ''',unsafe_allow_html=True)
     with st.form("assunto"):
         assunto = st.text_area("Insira aqui o assunto")
-        gerar = st.form_submit_button("Gerar pergunta")
-        gerar_conteudo = st.form_submit_button("Gerar conteudo")
+        gerar = st.form_submit_button("Gerar pergunta",use_container_width=True)
+        gerar_conteudo = st.form_submit_button("Gerar conteúdo",use_container_width=True)
         
         nivel = st.radio("Selecione o nível",
                          ["Para estudo", "Complexas do simulado CTFL"]
@@ -180,14 +240,18 @@ with col1:
                         '''
                 st.session_state.conteudo = ask_openai(assunto, prompt)
 with col2:
-    
+    st.write('''<h2 class="cor">Conteúdo</h2>
+             ''',unsafe_allow_html=True)
+    st.markdown('''### Adicione o assunto no campo de gerar conteúdo ou perguntas''')
     if st.session_state.imagem != "":
-        st.write("Item I - Mapa mental")
+        st.markdown('''### Item I - Mapa mental''')
         st.image(st.session_state.imagem)
         st.markdown(st.session_state.conteudo)
             
 with col3:
     
+    st.write(f'''<h2 class="cor">Questões</h2>
+             ''',unsafe_allow_html=True)
     st.session_state.numero = st.slider("Selecione uma questão",min_value=1, max_value=2, step=1)
 
     if st.session_state.questionario != "":
@@ -235,7 +299,7 @@ with col3:
     gabarito = gabarito.replace('"','')
     explicacao = st.session_state.explicacao 
     explicacao = explicacao.replace('"','')
-    st.write(pergunta)    
+    st.write(f'''<div class="pergunta">{st.session_state.numero}° - {pergunta}</div>''', unsafe_allow_html=True)    
 
     with st.form("Ask"):
 
@@ -246,17 +310,14 @@ with col3:
 
         print(f'''Você escolheu: {question}''')
         st.session_state.question = question
-        responder = st.form_submit_button("Responder")
+        responder = st.form_submit_button("Responder", use_container_width=True)
         if responder:
             print(f'Número: {st.session_state.numero}')
             if question == gabarito:
                 st.success("Você acertou!")
                 st.write("Explicação")
                 st.success(explicacao)
-                proximo = st.form_submit_button("Próximo")
-                if proximo:
-                    st.session_state.numero = st.session_state.numero + 1
-                    print(f'Número: {st.session_state.numero}')
+                
             else:
                 print(f'Número: {st.session_state.numero}')
                 st.error("Você errou")
@@ -264,10 +325,6 @@ with col3:
                 st.success(gabarito)
                 st.write("Explicação")
                 st.success(explicacao)
-                proximo = st.form_submit_button("Próximo")
-                if proximo:
-                    st.session_state.numero = st.session_state.numero + 1
-                    print(f'Número: {st.session_state.numero}')
-                    st.rerun()
+                
             
                 
