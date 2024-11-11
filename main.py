@@ -1,6 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 import json
+import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
 
@@ -349,7 +350,7 @@ with col2:
                     </body>
                     </html>
                     '''
-        st.components.v1.html(st.session_state.html_markdown, height=300)
+        components.html(st.session_state.html_markdown, height=300)
         #st.markdown(st.session_state.descricao)
         st.markdown(st.session_state.conteudo)
     else:        
