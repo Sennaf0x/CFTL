@@ -81,6 +81,9 @@ col1, col2, col3 = st.columns([2,3,2])
 if "question" not in st.session_state:
     st.session_state.question = ""
 
+if "html_markdown" not in st.session_state:
+    st.session_state.html_markdown = ""
+
 if "tamanho" not in st.session_state:
     st.session_state.tamanho = ""
 
@@ -254,7 +257,7 @@ with col2:
              ''',unsafe_allow_html=True)
     if st.session_state.conteudo != "":
         st.markdown('''<div class="pergunta2"> O mindmap aparecerá no campo abaixo </div>''',unsafe_allow_html=True)
-        html_markdown ='''
+        st.session_state.html_markdown ='''
                     <!DOCTYPE html>
                     <html lang="en">
                     <head>
@@ -346,7 +349,7 @@ with col2:
                     </body>
                     </html>
                     '''
-        st.components.v1.html(html_markdown, height=300)
+        st.components.v1.html(st.session_state.html_markdown, height=300)
         #st.markdown(st.session_state.descricao)
         st.markdown(st.session_state.conteudo)
     else:        
