@@ -46,6 +46,16 @@ st.markdown('''
                     margin: 5px 0 ;
                 }
                 
+                .pergunta2{
+                    padding: 10px;
+                    background-color: #CFD8E3;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    text-align: center;
+                    font-size: 17px;
+                    margin: 5px 0 ;
+                }
+                
                 .ef3psqc11{
                     background-color: rgba(207,1,59);
                     color: white;
@@ -56,6 +66,10 @@ st.markdown('''
                 .ef3psqc11:hover{
                     color: white;
                     background-color: #2B3B4B;
+                }
+                
+                .e1f1d6gn4{
+                    padding: 5px;
                 }
                 
                 
@@ -86,7 +100,7 @@ if "answer" not in st.session_state:
     st.session_state.answer = ""
 
 if "conteudo" not in st.session_state:
-    st.session_state.conteudo = "Carregue o conteúdo "
+    st.session_state.conteudo = "#### Carregue o conteúdo no campo de gerar perguntas"
 
 if "gabarito" not in st.session_state:
     st.session_state.gabarito = ""
@@ -223,31 +237,121 @@ with col1:
                 prompt =f'''
                         Quero aprender sobre o texto abaixo: 
                                 {assunto}
-                        Item 1 - Para isso, crie um mapa mental simples e legível, estilo mapa de dialogos e fonte arial, com os principais tópicos e conceitos do texto, utilizando uma cor que destaque o mapa mental criado quando o prompt for visualizado."
+                        Item 1 - Você é um programa que cria mindmaps utilizando o markmap e escreve somente texto em markdown
                         '''
                 
                 st.session_state.descricao = ask_openai(assunto, prompt)
-                #descricao = st.session_state.descricao
-                imagem_url = gerar_imagem(st.session_state.descricao)
-                
-                st.session_state.imagem = imagem_url
                 
                 prompt =f'''
                         Quero aprender sobre o texto abaixo: 
                                 {assunto}  
-                        Item 2 - Identifique e compartilhe os 20% mais importantes aprendizados do texto fornecido inicialmente que me ajudarão a entender 80% dele, utilizando uma analogia simples e cotidiana para um profissional de QA
+                        Item 2 - Identifique e compartilhe os 20% mais importantes aprendizados do texto fornecido inicialmente que me ajudarão a entender 80% dele.
                         Item 3 - Converta as principais lições deste tópico em histórias e metáforas envolventes para ajudar na minha memorização.
                         '''
                 st.session_state.conteudo = ask_openai(assunto, prompt)
 with col2:
     st.write('''<h2 class="cor">Conteúdo</h2>
              ''',unsafe_allow_html=True)
-    st.markdown('''### Adicione o assunto no campo de gerar conteúdo ou perguntas''')
-    if st.session_state.imagem != "":
-        st.markdown('''### Item I - Mapa mental''')
-        st.image(st.session_state.imagem)
+    if st.session_state.conteudo != "":
+        st.markdown('''<div class="pergunta2"> O mindmap aparecerá no campo abaixo </div>''',unsafe_allow_html=True)
+        html_markdown ='''
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>Markmap</title>
+                        <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.16"></script>
+                        <style>
+                        svg.markmap {
+                            width: 100%;
+                            height: 100vh;
+                            background-color: white;
+                        }
+                        
+                        .node{
+                            margin: 10px;
+                        }
+                        
+                        #fullscreen-button {
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            padding: 10px;
+                            background-color: rgba(207,1,59);
+                            color: white;
+                            border: none;
+                            cursor: pointer;
+                            z-index: 1000;
+                        }
+                        
+                        body, html {
+                            margin: 0;
+                            height: 100%;
+                            overflow: hidden;
+                        }
+
+                        #mindmap-container {
+                            height: calc(100% - 50px);
+                            width: 100%;
+                            transition: transform 0.3s ease;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        
+                        </style>
+                    </head>
+                    <body>
+                        <button id="fullscreen-button">Tela cheia</button>
+                        <div id="mindmap-container" class="markmap node">
+                            <script type="text/template">
+                                ---
+                                markmap:
+                                maxWidth: 400
+                                colorFreezeLevel: 2
+                                ---''' + f'''
+                                {st.session_state.descricao}
+                                ''' + '''
+                                
+                            </script>
+                        </div>
+                    <script>
+                        const fullscreenButton = document.getElementById('fullscreen-button');
+                        const mindmapContainer = document.getElementById('mindmap-container');
+                        
+                        function updateButtonLabel() {
+                            if (document.fullscreenElement) {
+                                fullscreenButton.textContent = 'Sair da Tela Cheia';
+                            } else {
+                                fullscreenButton.textContent = 'Tela Cheia';
+                                mindmapContainer.style.transform = 'none';
+                            }
+                        }
+
+                        fullscreenButton.addEventListener('click', () => {
+                            const elem = document.documentElement;
+                            if (!document.fullscreenElement) {
+                                elem.requestFullscreen().catch(err => {
+                                    alert(`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`);
+                                });
+                            } else {
+                                document.exitFullscreen();
+                            }
+                        });
+                        
+                        document.addEventListener('fullscreenchange', updateButtonLabel);
+                    </script>
+                    </body>
+                    </html>
+                    '''
+        st.components.v1.html(html_markdown, height=300)
+        #st.markdown(st.session_state.descricao)
         st.markdown(st.session_state.conteudo)
-            
+    else:        
+        st.markdown('''<div class="pergunta2"> Mindmap </div>''',unsafe_allow_html=True)
+
 with col3:
     
     st.write(f'''<h2 class="cor">Questões</h2>
