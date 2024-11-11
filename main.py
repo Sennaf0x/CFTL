@@ -92,13 +92,30 @@ if "question" not in st.session_state:
 
 if "html_markdown" not in st.session_state:
     st.session_state.html_markdown = '''
-    #Mindmap
-    ##Exemplo 1
-        - Exemplo 3
-        - Exemplo 4
-    ##Exemplo 2
-        **- Exemplo 5
-    '''
+                                    # Tópico Principal
+
+                                    ## Subtópico 1
+                                    - Ponto 1
+                                    - Detalhe 1
+                                    - Detalhe 2
+                                    - Ponto 2
+
+                                    ## Subtópico 2
+                                    - Ponto 1
+                                    - Ponto 2
+                                    - Detalhe 1
+                                        - Subdetalhe 1
+                                        - Subdetalhe 2
+
+                                    ## Subtópico 3
+                                    - Ponto 1
+                                    - Ponto 2
+                                    - Ponto 3
+
+                                    ## Conclusão
+                                    - Resumo dos tópicos
+                                    - Considerações finais
+                                    '''
 
 if "tamanho" not in st.session_state:
     st.session_state.tamanho = ""
