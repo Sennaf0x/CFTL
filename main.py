@@ -75,7 +75,12 @@ st.markdown('''
                 .e1f1d6gn4{
                     padding: 5px;
                 }
-                
+                .ef3psqc7{
+                    background-color: rgba(207,1,59);
+                    color: white;
+                    font-weight: bold;
+                    font-size: 15px;
+                }
                 
             </style>
             ''', unsafe_allow_html=True)
