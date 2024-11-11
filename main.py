@@ -91,7 +91,14 @@ if "question" not in st.session_state:
     st.session_state.question = ""
 
 if "html_markdown" not in st.session_state:
-    st.session_state.html_markdown = ""
+    st.session_state.html_markdown = '''
+    #Mindmap
+    ##Exemplo 1
+        - Exemplo 3
+        - Exemplo 4
+    ##Exemplo 2
+        **- Exemplo 5
+    '''
 
 if "tamanho" not in st.session_state:
     st.session_state.tamanho = ""
