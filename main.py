@@ -136,7 +136,7 @@ with col1:
             gerar_conteudo = st.form_submit_button("Gerar conteúdo",use_container_width=True)
             
             nivel = st.radio("Selecione o nível",
-                            ["Para estudo", "Complexas do simulado CTFL"]
+                            ["Para estudo", "Complexas e dificéis"]
                             )
             
             if assunto == "" and gerar:
@@ -189,10 +189,6 @@ with col1:
                     if assunto != "":
                         st.session_state.conteudo = ask_openai(assunto, prompt)
                     
-
-
-
-
 #Componente de questionário
 with col2:
     with st.expander('Questões', expanded=True):
@@ -251,10 +247,13 @@ with col2:
 
                 question = st.radio(
                     "Selecione a opção certa para a pergunta acima",
-                    [opcao1,opcao2, opcao3, opcao4, opcao5]
+                    [f"A - {opcao1}",f"B - {opcao2}", f"C - {opcao3}", f"D - {opcao4}", f"E - {opcao5}"]
                 )
-
-                print(f'''Você escolheu: {question}''')
+                
+                question = question[3:].strip()
+                gabarito = gabarito.replace('"','').strip()
+                print(question)
+                print(gabarito)
                 st.session_state.question = question
                 responder = st.form_submit_button("Responder", use_container_width=True)
                 if responder:
