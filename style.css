@@ -1,9 +1,47 @@
-.e1f1d6gn3{
-    box-shadow: rgba(207,1,59, 0.1) 0px 4px 12px;
-    padding: 10px;
-    border-radius: 10px;
+svg.markmap {
+    width: 100%;
+    height: 100vh;
+    background-color: white;
 }
 
+.node{
+    margin: 10px;
+}
+
+#fullscreen-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    background-color: rgba(207,1,59);
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+body, html {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+#mindmap-container {
+    height: calc(100% - 50px);
+    width: 100%;
+    transition: transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.e1f1d6gn3{
+        box-shadow: rgba(207,1,59, 0.1) 0px 4px 12px;
+        padding: 10px;
+        border-radius: 10px;
+        }
+                
 .stSlider{
     border: solid rgba(207,1,59, 0.6);
     padding: 0 10px;
@@ -43,10 +81,20 @@ stMainBlockContainer{
     background-color: #CFD8E3;
     border-radius: 10px;
     font-weight: bold;
-    text-align: justify;
+    text-align: center;
     font-size: 17px;
     margin: 5px 0 ;
 }
+
+.resposta{
+    padding: 20px;
+    text-align: justify;
+    border: 3px solid #CFD8E3;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; 
+}
+
 
 .ef3psqc11{
     background-color: rgba(207,1,59);
@@ -60,39 +108,25 @@ stMainBlockContainer{
     background-color: #2B3B4B;
 }
 
-svg.markmap {
-    width: 100%;
-    height: 100vh;
-    background-color: white;
+.e1f1d6gn4{
+    padding: 5px;
 }
-
-.node{
-    margin: 10px;
-}
-
-#fullscreen-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px;
+.ef3psqc7{
     background-color: rgba(207,1,59);
     color: white;
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
+    font-weight: bold;
+    font-size: 15px;
 }
 
-body, html {
-    margin: 0;
-    height: 100%;
-    overflow: hidden;
+.eqpbllx1{
+    background-color: #2B3B4B;
+    border-radius: 10px 10px 0 0 ;
+    color: white;
+    
 }
-
-#mindmap-container {
-    height: calc(100% - 50px);
-    width: 100%;
-    transition: transform 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.eqpbllx2 p{
+    font-weight: bold;
+    text-align: center;
+    font-size: 17px;
+    
 }
