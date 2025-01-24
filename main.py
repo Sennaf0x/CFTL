@@ -13,6 +13,9 @@ col1, col2 = st.columns(2)
 if "question" not in st.session_state:
     st.session_state.question = ""
 
+if "system" not in st.session_state:
+    st.session_state.system = "Você é um analista da qualidade de software senior e está encarregado de formular perguntas para estudantes"
+
 if "html_markdown" not in st.session_state:
     st.session_state.html_markdown = ""
 
@@ -54,8 +57,14 @@ if "descricao" not in st.session_state:
 if "answer" not in st.session_state:
     st.session_state.answer = ""
 
+if "mindmap" not in st.session_state:
+    st.session_state.mindmap = ""
+
 if "conteudo" not in st.session_state:
-    st.session_state.conteudo = "# O conteúdo aparecerá aqui"
+    st.session_state.conteudo = '''O conteúdo será exibido aqui...'''
+
+if "metafora" not in st.session_state:
+    st.session_state.metafora = "A metáfora será exibida aqui..."
 
 if "gabarito" not in st.session_state:
     st.session_state.gabarito = ""
@@ -80,10 +89,11 @@ if "explicacao" not in st.session_state:
 
 assunto = ""
 prompt = ""
-
+system = st.session_state.system
 client = OpenAI()
 
-def ask_openai(assunto, prompt):
+def ask_openai(system, assunto, prompt):
+    
     if assunto == "":
         return "Como posso ajudá-lo?"
     try:
@@ -93,10 +103,7 @@ def ask_openai(assunto, prompt):
             messages=[
                 {
                     "role": "system",
-                    "content": ('''
-                                Você é um analista da qualidade de software senior e está encarregado de formular perguntas para estudantes que irão fazer a prova do CTFL 4.0
-                                '''
-                                )
+                    "content": (f"{system}")
                 },
                 {
                     "role": "user",
@@ -162,32 +169,56 @@ with col1:
                                                         
                             ''' + f'''assunto = {assunto}
                             '''
-                    resposta = ask_openai(assunto, prompt)
+                    resposta = ask_openai(system, assunto, prompt)
                     
                     st.session_state.questionario = json.loads(resposta)
                     print(f"resposta_json: {st.session_state.questionario}")
                     
                 if gerar_conteudo:
+                    system = st.session_state.system
                     prompt =f'''
                             Quero aprender sobre o texto abaixo: 
                                     {assunto}
                             Item 1 - Você é um programa que cria mindmaps utilizando o markmap e escreve somente texto em markdown
                             '''
                     
-                    st.session_state.descricao = ask_openai(assunto, prompt)
+                    st.session_state.descricao = ask_openai(system, assunto, prompt)
                     
-                    prompt =f'''
-                            Quero aprender sobre o texto abaixo: 
-                                    {assunto}
-                            Item 2 - Identifique e compartilhe os 20% mais importantes para 80% do aprendizado do texto fornecido inicialmente que me ajudarão a entender 80% dele.
-                            Item 3 - Converta as principais lições deste tópico em histórias e metáforas envolventes para ajudar na minha memorização.
-                            ''' + '''exemplo de resposta = {"Item 2" : "Conteúdo em markdown",
-                                                            "Item 3" : "Conteúdo em markdown"}
-                                                        }
-                            
-                            '''
                     if assunto != "":
-                        st.session_state.conteudo = ask_openai(assunto, prompt)
+                        #system = '''
+                        #            Você é um programa que irá responder sobre um determinado assunto repondendo somente da seguinte maneira:
+                        #            exemplo de resposta = {"Item 2" : "Conteúdo do assunto em markdown",
+                        #                                   "Item 3" : "Conteúdo do assunto em markdown"}
+                        #          '''
+                        #prompt =f'''
+                        #    Quero aprender sobre o texto abaixo: 
+                        #            {assunto}
+                        #    Item 2 - Faça um resumo do assunto abordado em markdown.
+                        #    Item 3 - Converta as principais lições deste tópico em histórias e metáforas envolventes para ajudar na minha memorização.
+                        #    ''' + '''exemplo de resposta = {"Item 2" : "Conteúdo em markdown",
+                        #                                    "Item 3" : "Conteúdo em markdown"}
+                        #                                }
+                        #    
+                        #    '''
+                        system = '''
+                                    Você é um desenvolvedor que só responder através de linguagem markdown.
+                                     exemplo = #topico ##Subtopico
+                                 '''
+                        prompt = f'''
+                                    Crie um resumo sobre o assunto abaixo:
+                                    assunto = {assunto}
+                                  '''
+                        st.session_state.conteudo = ask_openai(system, assunto, prompt)
+                        
+                        system = '''
+                                    Você é um desenvolvedor que só responder através de linguagem markdown.
+                                     exemplo = #topico ##Subtopico
+                                 '''
+                        prompt = f'''
+                                    Crie 2 metáforas sobre o assunto abaixo:
+                                    assunto = {assunto}
+                                  '''
+                        st.session_state.metafora = ask_openai(system, assunto, prompt)
                     
 #Componente de questionário
 with col2:
@@ -275,7 +306,7 @@ with col2:
 #Componente de mindmap e conteúdo
 
 with st.container(border=True, key="container"):
-    with st.expander("Conteudo", expanded=True):
+    with st.expander("Mindmap", expanded=True):
         if st.session_state.conteudo != "":
             st.markdown('''<div class="pergunta2"> O mindmap aparecerá no campo abaixo </div>''',unsafe_allow_html=True)
             st.session_state.html_markdown ='''
@@ -369,20 +400,43 @@ with st.container(border=True, key="container"):
                         </script>
                         </body>
                         </html>
-                        '''
+                        '''    
             components.html(st.session_state.html_markdown, height=400)
             #st.markdown(st.session_state.descricao)
             #st.markdown(st.session_state.conteudo)
-            if assunto != "":
-                conteudo = json.loads(st.session_state.conteudo)
-                print(conteudo)
-            
-                st.write('''<div class="pergunta2"> Item 2 - 20% do conteúdo para 80% do aprendizado</div>''', unsafe_allow_html=True)
-                st.markdown(f'''<div class="resposta">{conteudo["Item 2"]}</div>''', unsafe_allow_html=True)
-                st.write('<div class="pergunta2"> Item 3 - Metaforas e analogias </div>', unsafe_allow_html=True)
-                st.markdown(f'''<div class="resposta">{conteudo["Item 3"]}</div>''', unsafe_allow_html=True)
-            else:        
-                st.markdown('''<div class="pergunta2"> Item 2 - 20% do conteúdo para 80% do aprendizado</div>''', unsafe_allow_html=True)
-                st.markdown(f'''<div class="resposta"><p>Insira um assunto para gerar o conteúdo... </p></div>''', unsafe_allow_html=True)
-                st.markdown('''<div class="pergunta2"> Item 3 - Metaforas e analogias </div>''', unsafe_allow_html=True)                
-                st.markdown(f'''<div class="resposta"><p>Insira um assunto para gerar o conteúdo... </p></div>''', unsafe_allow_html=True)
+
+    
+if assunto != "":
+    
+    conteudo = f"\n\n{st.session_state.conteudo}"
+    print("================================================")
+    print(f"{conteudo}")
+    
+    metafora = f"\n\n{st.session_state.metafora}"
+    print("================================================")
+    print(f"{metafora}")
+    
+    col3, col4 = st.columns(2)
+    
+    with col3:
+        with st.expander("Resumo", expanded=True):
+            st.write('''<div class="pergunta2">Resumo do assunto</div>''', unsafe_allow_html=True)
+            st.markdown(f'''<div class="resposta">{conteudo}</div>''', unsafe_allow_html=True)
+        
+    with col4:
+        with st.expander("Metáfora", expanded=True):
+            st.write('<div class="pergunta2"> Item 3 - Metáforas e analogias </div>', unsafe_allow_html=True)
+            st.markdown(f'''<div class="resposta">{metafora}</div>''', unsafe_allow_html=True)
+else:        
+    
+    col3, col4 = st.columns(2)
+    
+    with col3:
+        with st.expander("Resumo", expanded=True):
+            st.markdown('''<div class="pergunta2">Resumo do assunto</div>''', unsafe_allow_html=True)
+            st.markdown(f'''<div class="resposta"><p>{st.session_state.conteudo} </p></div>''', unsafe_allow_html=True)
+    
+    with col4:
+        with st.expander("Metáfora", expanded=True):
+            st.markdown('''<div class="pergunta2">Metaforas e analogias</div>''', unsafe_allow_html=True)                
+            st.markdown(f'''<div class="resposta"><p>{st.session_state.metafora} </p></div>''', unsafe_allow_html=True)
